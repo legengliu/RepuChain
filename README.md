@@ -68,7 +68,7 @@ In this phase we expect you to have solved any issues with your smart contract t
 
 ## Instructions
 
-For each deliverable, we will be checking the same GitHub url. Please fork this repo and submit the link to your repo here: INSERT URL
+For each deliverable, we will be checking the same GitHub url. Please fork this repo and submit the link to your repo here: https://goo.gl/forms/WlQTlu4lavaX5Bgx1
 
 ## Extras
 
