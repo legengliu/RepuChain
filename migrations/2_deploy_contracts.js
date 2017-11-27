@@ -1,8 +1,7 @@
-var ConvertLib = artifacts.require("./ConvertLib.sol");
-var MetaCoin = artifacts.require("./MetaCoin.sol");
+var Reputation = artifacts.require("./Reputation.sol");
+var ReputationGraph = artifacts.require("./ReputationGraph.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(ConvertLib);
-  deployer.link(ConvertLib, MetaCoin);
-  deployer.deploy(MetaCoin);
+  deployer.deploy(Reputation);
+  deployer.deploy(ReputationGraph);
 };

@@ -29,7 +29,7 @@ contract ReputationGraph {
 	/*
 	 * Add outgoing rating from SRC to TARGET.
 	*/
-	function addRating(address src, address target) ownerOnly returns (bool) {
+	function addRating(address src, address target) ownerOnly public returns (bool) {
 		for (uint i = 0; i < graph[src].length; i++) {
 			if (graph[src][i] == target) {
 				return false;
@@ -43,7 +43,7 @@ contract ReputationGraph {
 	/*
 	 * Remove(revoke) SRC's rating of TARGET address.
 	*/
-	function removeRating(address src, address target) ownerOnly returns(bool) {
+	function removeRating(address src, address target) ownerOnly public returns(bool) {
 		for (uint i = 0; i < graph[src].length; i++) {
 			if (graph[src][i] == target) {
 				delete graph[src][i];
