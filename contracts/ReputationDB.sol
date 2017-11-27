@@ -1,5 +1,8 @@
 pragma solidity ^0.4.15;
 
+/*
+ * Database contract
+*/
 contract ReputationDB {
 
 	address _owner;
@@ -18,14 +21,17 @@ contract ReputationDB {
 	}
 
 	/*
-	 * Public functions
+	 * The owner Reputation contract can update reputations.
 	*/
 	function updateReputation(address target, uint rep) ownerOnly {
 		reputations[target] = rep;
 	}
 
-	function checkReputation(address target) constant {
-		// TODO: check that target is in reputations
+	function getAllReputaions() ownerOnly {
+		return reputations;
+	}
+
+	function getReputation(address target) constant {
 		return reputations[target];
 	}
 }
