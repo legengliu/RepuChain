@@ -7,11 +7,16 @@ contract ReputationGraph {
 
 	address _owner;
 	// a graph of outgoing ratings
-	mapping (address => address[]) graph;
+	mapping (address => address[]) public graph;
 
 	/*
+	 * Events
+	*/
+	event RatingAdded(address src, address target);
+	event RatingDeleted(address src, address target);
+	/*
 	 * Modifiers
-	 */
+	*/
 	modifier ownerOnly() {
 		require(msg.sender == _owner);
 		_;
@@ -30,28 +35,22 @@ contract ReputationGraph {
 				return false;
 			}
 		}
-		graph[src].append(target);
+		graph[src].push(target);
+		RatingAdded(src, target);
 		return true;
 	}
 
 	/*
 	 * Remove(revoke) SRC's rating of TARGET address.
 	*/
-	function removeRating(address src, address target) ownerOnly returns (bool) {
+	function removeRating(address src, address target) ownerOnly returns(bool) {
 		for (uint i = 0; i < graph[src].length; i++) {
 			if (graph[src][i] == target) {
 				delete graph[src][i];
+				RatingDeleted(src, target);
 				return true;
 			}
 		}
 		return false;
-	}
-
-	function getAllReputaions() constant ownerOnly {
-		return graph;
-	}
-
-	function getOutgoingRatings(address src) constant ownerOnly {
-		return graph[src];
 	}
 }

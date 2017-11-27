@@ -5,6 +5,7 @@ import "./ReputationGraph.sol";
 contract Reputation {
 
 	address owner;
+	ReputationGraph graph;
 
 	function Reputation() {
 		owner = msg.sender;
@@ -19,13 +20,5 @@ contract Reputation {
 		require(toRate != 0x0);
 		require(msg.sender != toRate);
 		return graph.addRating(msg.sender, toRate);
-	}
-
-	/*
-	 * Check all the addresses that a particular RATER address
-	 * has rated. 
-	*/
-	function checkAddressesRated (address rater) constant returns (address[]) {
-		return graph.getOutgoingRatings(rater);
 	}
 }
