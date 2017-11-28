@@ -1,17 +1,26 @@
 pragma solidity ^0.4.15;
 
-import "./ReputationGraph.sol";
-
 contract Reputation {
 
-	address owner;
-	ReputationGraph graph;
+	address public owner;
+	// a graph of outgoing ratings
+	mapping (address => address[]) public graph;
+	address[] public nodes;
 
-	event ratingAdded(bool rateSuccess);
+	/*
+	 * Events
+	*/
+	event RatingAdded(address src, address target);
+	event RatingDeleted(address src, address target);
+
+	modifier ownerOnly() {
+		if (msg.sender == owner) {
+			_;
+		}
+	}
 
 	function Reputation() {
 		owner = msg.sender;
-		graph = new ReputationGraph();
 	}
 
 	/*
@@ -21,12 +30,61 @@ contract Reputation {
 	function rate(address toRate) public returns (bool) {
 		require(toRate != 0x0);
 		if (msg.sender == toRate) {
-			ratingAdded(false);
 			return false;
 		}
-
-		bool added = graph.addRating(msg.sender, toRate);
-		ratingAdded(added);
+		bool added = addRating(msg.sender, toRate);
 		return added;
+	}
+
+	/*
+	 * Internal function to add rating to grpah.
+	*/ 
+	function addRating(address src, address target) internal returns (bool) {
+		for (uint i = 0; i < graph[src].length; i++) {
+			if (graph[src][i] == target) {
+				return false;
+			}
+		}
+		graph[src].push(target);
+		RatingAdded(src, target);
+		for (uint j = 0; j < nodes.length; j++) {
+			if (nodes[j] == src) {
+				return true;
+			}
+		}
+		nodes.push(src);
+		return true;
+	}
+
+
+	/*
+	 * Remove(revoke) SRC's rating of TARGET address.
+	*/
+	function removeRating(address src, address target) public returns(bool) {
+		require(msg.sender == src);
+		for (uint i = 0; i < graph[src].length; i++) {
+			if (graph[src][i] == target) {
+				delete graph[src][i];
+				RatingDeleted(src, target);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/*
+	 * Constant functions
+	*/
+
+	function getOutgoingRatings(address src) public constant returns(address[]) {
+		return graph[src];
+	}
+
+	function getOwner() public constant returns(address) {
+		return owner;
+	}
+
+	function numNodes() public constant returns(uint) {
+		return nodes.length;
 	}
 }

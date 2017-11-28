@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import contract from 'truffle-contract'
 import RepContract from '../build/contracts/Reputation.json'
 import getWeb3 from './utils/getWeb3'
 
@@ -36,37 +37,43 @@ class App extends Component {
   }
 
   instantiateContract() {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
-
-    const contract = require('truffle-contract')
-    const reputation = contract(RepContract)
-    reputation.setProvider(this.state.web3.currentProvider)
-
+    
     this.state.web3.eth.defaultAccount = this.state.web3.eth.accounts[0];
 
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var repInstance
+    const Reputation = contract(RepContract)
+    Reputation.setProvider(this.state.web3.currentProvider)
+
+    // Declaring this for later so we can chain functions
+    let repInstance
 
     // debugging
-    console.log("web3 object: ")
-    console.log(this.state.web3)
-    console.log("Accounts: ")
-    console.log(this.state.web3.eth.accounts)
+    // console.log("web3 object: ")
+    // console.log(this.state.web3)
+    // console.log("Accounts: ")
+    // console.log(this.state.web3.eth.accounts)
 
-    // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      reputation.deployed()
-      .then((instance) => {
-        repInstance = instance
-        return repInstance.rate(accounts[1])
-      })
-      // TODO: listen for contract Events
-    })
+    let accounts = this.state.web3.eth.accounts;
+
+    async function rate(src, dst) {
+      let repInstance = await Reputation.deployed();
+      console.log(repInstance)
+
+      let rated = await repInstance.rate(dst, {from: src});
+      return rated;
+    }
+/*
+    async function getRating(addr) {
+      let repInstance = await reputation.deployed();
+      let rating = await repInstance.getOutgoingRatings(addr);
+      return rating
+    }
+*/
+    rate(accounts[9], accounts[6])
+    .then(res => console.log(res.logs[0].args.rateSuccess));
+/*
+    getRating(accounts[1])
+    .then(res => console.log(res));
+*/
   }
 
   render() {
@@ -75,7 +82,6 @@ class App extends Component {
         <nav className="navbar pure-menu pure-menu-horizontal">
             <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
         </nav>
-
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
