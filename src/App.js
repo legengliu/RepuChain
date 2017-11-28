@@ -68,8 +68,8 @@ class App extends Component {
       return rating
     }
 */
-    rate(accounts[9], accounts[6])
-    .then(res => console.log(res.logs[0].args.rateSuccess));
+    rate(accounts[6], accounts[9])
+    .then(res => console.log(res.logs[0].args.success));
 /*
     getRating(accounts[1])
     .then(res => console.log(res));
