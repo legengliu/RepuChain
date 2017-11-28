@@ -5,7 +5,7 @@ pragma solidity ^0.4.15;
 */
 contract ReputationGraph {
 
-	address _owner;
+	address public owner;
 	// a graph of outgoing ratings
 	mapping (address => address[]) public graph;
 
@@ -18,26 +18,30 @@ contract ReputationGraph {
 	 * Modifiers
 	*/
 	modifier ownerOnly() {
-		require(msg.sender == _owner);
-		_;
+		if (msg.sender == owner) {
+			_;
+		}
 	}
 
-	function ReputationGraph(address owner) {
-		_owner = owner;
+	function ReputationGraph() {
+		owner = msg.sender;
 	}
 
 	/*
 	 * Add outgoing rating from SRC to TARGET.
 	*/
-	function addRating(address src, address target) ownerOnly public returns (bool) {
-		for (uint i = 0; i < graph[src].length; i++) {
-			if (graph[src][i] == target) {
-				return false;
+	function addRating(address src, address target) public returns (bool) {
+		if (msg.sender == owner) {
+			for (uint i = 0; i < graph[src].length; i++) {
+				if (graph[src][i] == target) {
+					return false;
+				}
 			}
+			graph[src].push(target);
+			RatingAdded(src, target);
+			return true;
 		}
-		graph[src].push(target);
-		RatingAdded(src, target);
-		return true;
+		return false;
 	}
 
 	/*
@@ -52,5 +56,17 @@ contract ReputationGraph {
 			}
 		}
 		return false;
+	}
+
+	// function getAllReputaions() constant returns(mapping (address => address[])) {
+	// 	return graph;
+	// }
+
+	function getOutgoingRatings(address src) external constant returns(address[]) {
+		return graph[src];
+	}
+
+	function getOwner() public constant returns(address) {
+		return owner;
 	}
 }

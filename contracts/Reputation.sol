@@ -7,9 +7,11 @@ contract Reputation {
 	address owner;
 	ReputationGraph graph;
 
+	event ratingAdded(bool rateSuccess);
+
 	function Reputation() {
 		owner = msg.sender;
-		graph = new ReputationGraph(this);
+		graph = new ReputationGraph();
 	}
 
 	/*
@@ -18,7 +20,13 @@ contract Reputation {
 	*/
 	function rate(address toRate) public returns (bool) {
 		require(toRate != 0x0);
-		require(msg.sender != toRate);
-		return graph.addRating(msg.sender, toRate);
+		if (msg.sender == toRate) {
+			ratingAdded(false);
+			return false;
+		}
+
+		bool added = graph.addRating(msg.sender, toRate);
+		ratingAdded(added);
+		return added;
 	}
 }

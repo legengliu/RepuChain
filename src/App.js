@@ -47,23 +47,25 @@ class App extends Component {
     const reputation = contract(RepContract)
     reputation.setProvider(this.state.web3.currentProvider)
 
+    this.state.web3.eth.defaultAccount = this.state.web3.eth.accounts[0];
+
     // Declaring this for later so we can chain functions on SimpleStorage.
-    var reputationInstance
+    var repInstance
+
+    // debugging
+    console.log("web3 object: ")
+    console.log(this.state.web3)
+    console.log("Accounts: ")
+    console.log(this.state.web3.eth.accounts)
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
-      reputation.deployed().then((instance) => {
-        reputationInstance = instance
-
-        // Stores a given value, 5 by default.
-        return reputationInstance.set(7, {from: accounts[0]})
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return reputationInstance.get.call(accounts[0])
-      }).then((result) => {
-        // Update state with the result.
-        return this.setState({ storageValue: result.c[0] })
+      reputation.deployed()
+      .then((instance) => {
+        repInstance = instance
+        return repInstance.rate(accounts[1])
       })
+      // TODO: listen for contract Events
     })
   }
 
