@@ -12,6 +12,7 @@ contract Reputation {
 	*/
 	event RatingAdded(address src, address target);
 	event RatingDeleted(address src, address target);
+	event RatingIsSuccessful(bool success);
 
 	modifier ownerOnly() {
 		if (msg.sender == owner) {
@@ -30,30 +31,35 @@ contract Reputation {
 	function rate(address toRate) public returns (bool) {
 		require(toRate != 0x0);
 		if (msg.sender == toRate) {
+			RatingIsSuccessful(false);
 			return false;
 		}
 		bool added = addRating(msg.sender, toRate);
+		RatingIsSuccessful(added);
 		return added;
 	}
 
 	/*
 	 * Internal function to add rating to grpah.
 	*/ 
-	function addRating(address src, address target) internal returns (bool) {
-		for (uint i = 0; i < graph[src].length; i++) {
-			if (graph[src][i] == target) {
-				return false;
+	function addRating(address src, address target) public returns (bool) {
+		if (msg.sender == owner) {
+			for (uint i = 0; i < graph[src].length; i++) {
+				if (graph[src][i] == target) {
+					return false;
+				}
 			}
-		}
-		graph[src].push(target);
-		RatingAdded(src, target);
-		for (uint j = 0; j < nodes.length; j++) {
-			if (nodes[j] == src) {
-				return true;
+			graph[src].push(target);
+			RatingAdded(src, target);
+			for (uint j = 0; j < nodes.length; j++) {
+				if (nodes[j] == src) {
+					return true;
+				}
 			}
+			nodes.push(src);
+			return true;
 		}
-		nodes.push(src);
-		return true;
+		return false;
 	}
 
 
