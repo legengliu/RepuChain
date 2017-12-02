@@ -61,19 +61,23 @@ class App extends Component {
       let rated = await repInstance.rate(dst, {from: src});
       return rated;
     }
-/*
-    async function getRating(addr) {
-      let repInstance = await reputation.deployed();
+
+    async function getRatings(addr) {
+      console.log(typeof addr);
+      console.log(addr);
+      let repInstance = await Reputation.deployed();
+      console.log(repInstance);
       let rating = await repInstance.getOutgoingRatings(addr);
+      console.log(typeof rating);
+      console.log(rating);
       return rating
     }
-*/
+
     rate(accounts[6], accounts[9])
     .then(res => console.log(res.logs[0].args.success));
-/*
-    getRating(accounts[1])
+
+    getRatings(accounts[6])
     .then(res => console.log(res));
-*/
   }
 
   render() {

@@ -93,4 +93,8 @@ contract Reputation {
 	function numNodes() public constant returns(uint) {
 		return nodes.length;
 	}
+
+	function numOutgoingRatings(address src) public constant returns(uint) {
+		return graph[src].length;
+	}
 }
