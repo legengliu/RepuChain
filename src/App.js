@@ -37,7 +37,7 @@ class App extends Component {
   }
 
   instantiateContract() {
-    
+    let web3 = this.state.web3;
     this.state.web3.eth.defaultAccount = this.state.web3.eth.accounts[0];
 
     const Reputation = contract(RepContract)
@@ -56,13 +56,26 @@ class App extends Component {
 
     async function rate(src, dst) {
       let repInstance = await Reputation.deployed();
-      console.log(repInstance)
-
-      let rated = await repInstance.rate(dst, {from: src});
+      console.log(repInstance);
+      console.log('Rating address ' + dst + ' from address ' + src);
+      let rated = await repInstance.rate(dst, {from: src, gas: 1000000});
       return rated;
     }
 
-    async function getRatings(addr) {
+    async function getNodeAtIndex(index) {
+      let repInstance = await Reputation.deployed();
+      let n = await repInstance.getNodeAtIndex(index);
+      return n;
+    }
+    
+    rate(accounts[0], accounts[1])
+    .then(res => console.log(res.logs[0].args.success));
+
+    // getNodeAtIndex(0)
+    // .then(res => console.log(web3.toHex(res)));
+
+  /*
+   async function getRatings(addr) {
       console.log(typeof addr);
       console.log(addr);
       let repInstance = await Reputation.deployed();
@@ -72,29 +85,34 @@ class App extends Component {
       console.log(rating);
       return rating
     }
+    */
 
-    rate(accounts[6], accounts[9])
-    .then(res => console.log(res.logs[0].args.success));
 
-    getRatings(accounts[6])
-    .then(res => console.log(res));
+    // Reputation.deployed().then((instance) => {
+    //   repInstance = instance;
+    //   return repInstance.getOutgoingRating.call(accounts[6], 0);
+    // }).then((result) => {
+    //    console.log(web3.toHex(result));
+    // });
+
+    // let numNodes = await repInstance.numNodes({from: accounts[4]});
+    //   console.log(web3.toHex(numNodes));
+    //   let OutgoingRatings = await repInstance.getOutgoingRatings(src);
+    //   console.log(OutgoingRatings);
+
+
+    // getRatings(accounts[6])
+    // .then(res => console.log(res));
   }
 
   render() {
     return (
       <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
         <main className="container">
           <div className="pure-g">
             <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
+              <h1>RepuChain</h1>
+              <p>case study in a decentralized reputation system</p>
             </div>
           </div>
         </main>

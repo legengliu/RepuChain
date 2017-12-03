@@ -33,7 +33,6 @@ contract Reputation {
 			RatingSuccessfullyAdded(false, 0x0, 0x0);
 			return false;
 		}
-
 		for (uint i = 0; i < graph[msg.sender].length; i++) {
 			if (graph[msg.sender][i] == toRate) {
 				RatingSuccessfullyAdded(false, 0x0, 0x0);
@@ -42,26 +41,20 @@ contract Reputation {
 		}
 		graph[msg.sender].push(toRate);
 		RatingSuccessfullyAdded(true, msg.sender, toRate);
+		// addNodeToNodes(msg.sender);
 		return true;
 	}
 
-	/*
-	 * Internal function to add rating to grpah.
-	
-	function addRating(address src, address target) internal returns (bool) {
-
-		graph[src].push(target);
-		RatingAdded(src, target);
-		// for (uint j = 0; j < nodes.length; j++) {
-		// 	if (nodes[j] == src) {
-		// 		return true;
-		// 	}
-		// }
-		// nodes.push(src);
+	function addNodeToNodes(address n) internal returns (bool) {
+		// add msg.sender to a list of raters
+		for (uint j = 0; j < nodes.length; j++) {
+			if (nodes[j] == n) {
+				return false;
+			}
+		}
+		nodes.push(n);
 		return true;
 	}
-	*/ 
-
 
 	/*
 	 * Remove(revoke) SRC's rating of TARGET address.
@@ -79,11 +72,11 @@ contract Reputation {
 	}
 
 	/*
-	 * Constant functions
+	 * Constant getter functions
 	*/
 
-	function getOutgoingRatings(address src) public constant returns(address[]) {
-		return graph[src];
+	function getOutgoingRating(address src, uint i) public constant returns(address) {
+		return graph[src][i];
 	}
 
 	function getOwner() public constant returns(address) {
@@ -95,6 +88,7 @@ contract Reputation {
 	}
 
 	function numOutgoingRatings(address src) public constant returns(uint) {
-		return graph[src].length;
+		uint l = graph[src].length;
+		return l;
 	}
 }
