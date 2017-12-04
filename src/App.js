@@ -3,9 +3,6 @@ import contract from 'truffle-contract'
 import RepContract from '../build/contracts/Reputation.json'
 import getWeb3 from './utils/getWeb3'
 
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
 import './App.css'
 
 class App extends Component {
@@ -47,9 +44,6 @@ class App extends Component {
     const Reputation = contract(RepContract);
     Reputation.setProvider(this.state.web3.currentProvider);
 
-    // Declaring this for later so we can chain functions
-    // let repInstance
-
     // debugging
     // console.log("web3 object: ")
     // console.log(this.state.web3)
@@ -61,29 +55,6 @@ class App extends Component {
       accounts: web3.eth.accounts,
       ReputationContract: Reputation
     })
-
-    // let accounts = this.state.web3.eth.accounts;
-/*
-    async function rate(src, dst) {
-      let repInstance = await Reputation.deployed();
-      console.log(repInstance);
-      console.log('Rating: from: ' + src + ' to: ' + dst);
-      let rated = await repInstance.rate(dst, {from: src, gas: 1000000});
-      return rated;
-    }
-
-    async function getRating(index) {
-      let repInstance = await Reputation.deployed();
-      let n = await repInstance.getRating(index);
-      return n;
-    }
-    
-    rate(accounts[7], accounts[9])
-    .then(res => console.log(res.logs[0].args.success));
-
-    getRating(2)
-    .then(res => console.log(res));
-*/
   }
 
   async getRating(index) {
