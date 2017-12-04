@@ -5,8 +5,16 @@ body,
   font-family: 'Open Sans', sans-serif;
 }
 
+.App {
+  text-align: center;
+}
+
+.subtitle {
+  font-style: italic;
+}
+
 h1, h2, h3 {
-  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 input[type=text], select {

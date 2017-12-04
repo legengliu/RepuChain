@@ -1,9 +1,10 @@
+let graph = require('pagerank.js');
 /*
  * input ratings is an array of tuples representing each outward directed edge
  */
 function Rank(ratings) {
-	let graph = require('pagerank.js');
 	let results = [];
+	graph.reset();
 	for (let i = 0; i < ratings.length; i++) {
 		let src = ratings[i][0];
 		let dst = ratings[i][1];

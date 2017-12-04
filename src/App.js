@@ -140,7 +140,7 @@ class App extends Component {
       );
       return (
         <div >
-          <ul>{listItems}</ul>
+          {listItems}
         </div>
       );
   }
@@ -151,7 +151,7 @@ class App extends Component {
       );
       return (
         <div >
-        <ul>{prItems}</ul>
+        {prItems}
         </div>
       );
   }
@@ -160,9 +160,9 @@ class App extends Component {
     return (
       <div className="App">
               <h1>RepuChain</h1>
-              <p>case study in a decentralized reputation system</p>
+              <p className="subtitle">case study in a decentralized reputation system</p>
             <div >
-              Submit a rating below:
+              Submit a rating for an Ethereum address:
             </div>
             <form onSubmit={e => this.submitRating(e)}>
               <div>
