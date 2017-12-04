@@ -3,14 +3,17 @@ pragma solidity ^0.4.15;
 contract Reputation {
 
 	address public owner;
-	// a graph of outgoing ratings
-	mapping (address => address[]) public graph;
-	address[] public nodes;
+	// keep track of whether one addr has already rated another addr
+	mapping(address => mapping(address => bool)) public outgoingRatings;
+	Rating[] public ratings;
+	struct Rating{
+	    address from;
+	    address to;
+	}
 
 	/*
 	 * Events
 	*/
-	event RatingDeleted(address src, address target);
 	event RatingSuccessfullyAdded(bool success, address src, address target);
 
 	modifier ownerOnly() {
@@ -28,67 +31,39 @@ contract Reputation {
 	 * rate any other address.
 	*/
 	function rate(address toRate) public returns (bool) {
-		require(toRate != 0x0);
+		require(toRate != address(0));
 		if (msg.sender == toRate) {
-			RatingSuccessfullyAdded(false, 0x0, 0x0);
+			RatingSuccessfullyAdded(false, address(0), address(0));
 			return false;
 		}
-		for (uint i = 0; i < graph[msg.sender].length; i++) {
-			if (graph[msg.sender][i] == toRate) {
-				RatingSuccessfullyAdded(false, 0x0, 0x0);
-				return false;
-			}
-		}
-		graph[msg.sender].push(toRate);
-		RatingSuccessfullyAdded(true, msg.sender, toRate);
-		// addNodeToNodes(msg.sender);
-		return true;
-	}
 
-	function addNodeToNodes(address n) internal returns (bool) {
-		// add msg.sender to a list of raters
-		for (uint j = 0; j < nodes.length; j++) {
-			if (nodes[j] == n) {
-				return false;
-			}
-		}
-		nodes.push(n);
-		return true;
-	}
+		if (outgoingRatings[msg.sender][toRate] != true) {
+			outgoingRatings[msg.sender][toRate] = true;
 
-	/*
-	 * Remove(revoke) SRC's rating of TARGET address.
-	*/
-	function removeRating(address src, address target) public returns(bool) {
-		require(msg.sender == src);
-		for (uint i = 0; i < graph[src].length; i++) {
-			if (graph[src][i] == target) {
-				delete graph[src][i];
-				RatingDeleted(src, target);
-				return true;
-			}
+			Rating memory newRating;
+	        newRating.from = msg.sender;
+	        newRating.to = toRate;
+	        ratings.push(newRating);
+	        RatingSuccessfullyAdded(true, msg.sender, toRate);
+	        return true;
 		}
+
+		RatingSuccessfullyAdded(false, address(0), address(0));
 		return false;
 	}
 
 	/*
 	 * Constant getter functions
 	*/
+	function getNumRatings() public constant returns(uint) {
+		return ratings.length;
+	}
 
-	function getOutgoingRating(address src, uint i) public constant returns(address) {
-		return graph[src][i];
+	function getRating(uint index) public constant returns(address, address) {
+		return (ratings[index].from, ratings[index].to);
 	}
 
 	function getOwner() public constant returns(address) {
 		return owner;
-	}
-
-	function numNodes() public constant returns(uint) {
-		return nodes.length;
-	}
-
-	function numOutgoingRatings(address src) public constant returns(uint) {
-		uint l = graph[src].length;
-		return l;
 	}
 }

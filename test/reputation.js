@@ -12,14 +12,14 @@ contract('Reputation', function(accounts) {
 
   it("...should initialize a graph", async function() {
     rep = await Reputation.deployed();
-    let g = await rep.getOutgoingRatings.call(accounts[0]);
-    assert.equal(g.length, 0, "outgoing links should be empty");
+    let g = await rep.getNumRatings.call();
+    assert.equal(g.toNumber(), 0, "outgoing links should be empty");
   })
 
   it("...should allow rate.", async function() {
     rep = await Reputation.deployed();
     let rated = await rep.rate(accounts[1], {from: accounts[0]});
-    assert.equal(rated.logs[1].args.success, true, "Rate should return true");
+    assert.equal(rated.logs[0].args.success, true, "Rate should return true");
   });
 
   it("...should not allow an address to rate itself", async function() {
@@ -28,21 +28,16 @@ contract('Reputation', function(accounts) {
     assert.equal(rated.logs[0].args.success, false, "Rate should return false");
   });
 
-
   it("...should add rating", async function() {
-    rep = await Reputation.deployed();
-    await rep.addRating(accounts[1], accounts[2], {from: accounts[0]});
-    await rep.addRating(accounts[1], accounts[3], {from: accounts[0]});
-    await rep.addRating(accounts[2], accounts[7], {from: accounts[0]});
+    rep = await Reputation.new();
+    await rep.rate(accounts[2], {from: accounts[1]});
+    await rep.rate(accounts[3], {from: accounts[1]});
+    await rep.rate(accounts[7], {from: accounts[2]});
+    await rep.rate(accounts[8], {from: accounts[5]});
 
-    let g_1 = await rep.getOutgoingRatings.call(accounts[1]);
-    assert.equal(g_1.length, 2, "should have 2 outgoing ratings.");
-
-    let g_2 = await rep.getOutgoingRatings.call(accounts[2]);
-    assert.equal(g_2.length, 1, "should have 1 outgoing rating.");
-
-    let g_3 = await rep.getOutgoingRatings.call(accounts[3]);
-    assert.equal(g_3.length, 0, "should have 0 outgoing ratings.");
+    let g_1 = await rep.getNumRatings.call();
+    console.log(g_1);
+    assert.equal(g_1.toNumber(), 4, "should have 4 total ratings.");
   })
 
 /*
