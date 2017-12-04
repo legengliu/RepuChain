@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import contract from 'truffle-contract'
 import RepContract from '../build/contracts/Reputation.json'
 import getWeb3 from './utils/getWeb3'
+import Rank from './Ranking'
 
 import './App.css'
 
@@ -13,6 +14,7 @@ class App extends Component {
       formValue1: '',
       formValue2: '',
       allRatings: [],
+      prRankings: [],
       web3: null,
       accounts: [],
       ReputationContract: null
@@ -122,12 +124,35 @@ class App extends Component {
     this.setState({allRatings: tempAll});
   }
 
+  rankRatings() {
+    let ratings = this.state.allRatings;
+    let PRResults = Rank(ratings);
+    // sort by descending PR score
+    PRResults.sort((a, b) => {
+      return b[1] - a[1];
+    });
+    this.setState({prRankings: PRResults});
+  }
+
   renderAllRatings() {
       const listItems = this.state.allRatings.map((rating, index) => 
         <li key={index}> From: {rating[0]} To: {rating[1]} </li>
       );
       return (
-        <ul>{listItems}</ul>
+        <div >
+          <ul>{listItems}</ul>
+        </div>
+      );
+  }
+
+  renderPRRankings() {
+    const prItems = this.state.prRankings.map((ranking, index) => 
+        <li key={index}> Address: {ranking[0]} Ranking: {ranking[1]} </li>
+      );
+      return (
+        <div >
+        <ul>{prItems}</ul>
+        </div>
       );
   }
 
@@ -141,12 +166,12 @@ class App extends Component {
             </div>
             <form onSubmit={e => this.submitRating(e)}>
               <div>
-                <label> From:
+                <label> From:&nbsp;
                   <input type="text" value={this.state.formValue1} onChange={e => this.handleChange1(e)} placeholder="address" />
                 </label>
               </div>
               <div>
-              <label> To:
+              <label> To:&nbsp;
                 <input type="text" value={this.state.formValue2} onChange={e => this.handleChange2(e)} placeholder="address" />
               </label>
               </div>
@@ -155,7 +180,10 @@ class App extends Component {
             </form>
             <div className="allRatings">
               <button className="getRatings" onClick={() => this.getRatings()}> Get all ratings </button>
+              <button className="rankRatings" onClick={() => this.rankRatings()}>
+               Rank all addresses </button>
                 {this.renderAllRatings()}
+                {this.renderPRRankings()}
             </div>
       </div>
     );
