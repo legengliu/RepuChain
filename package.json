@@ -50,9 +50,11 @@
   },
   "dependencies": {
     "dotenv": "^2.0.0",
+    "ethereumjs-testrpc": "^6.0.3",
     "pagerank.js": "^1.0.2",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "truffle": "^4.0.1"
   },
   "scripts": {
     "start": "node scripts/start.js",

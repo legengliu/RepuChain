@@ -11,17 +11,52 @@ I recognize the potential negative impact of any such reputation system, such as
 
 
 ## Functionality
+This project is split into two components: 
 
 ### Backend
 
-The core of this project is split into two components: 
+First, an on-chain smart contract, written in Solidity, keeps track of the reputations associated with each Ethereum address and allow any address to send a boolean rating to any other address.
 
-First, on-chain smart contract(s) will keep track of the reputations associated with each Ethereum address and allow any address to check and rate the reputation of any other address. The smart contract(s) will call the off-chain algorithm to compute the resulting reputations.
 
-Second, an off-chain ranking algorithm will do the actual computation to find the reputation of each address. This algorithm will utilize existing libraries, or will be based on open-source implementations of website-ranking algorithms or other peer-to-peer ranking algorithms (TBD). 
+### Frontend
+A simple frontend UI, built with React, will allow easy interaction with the core backend. 
+
+Through the web browser interface, anyone can send a rating to the core Ethereum contract, see all the ratings, as well as check the "PageRank" score of each Ethereum address. 
 
 The bottom line is that a high-ranking address's ranking of another address will carry more weight than that of a low-ranking address. Small fees associated with Ethereum smart contract transactions will disincentivize bad actors from spamming and manipulating the system.
 
-### Frontend
-A simple frontend UI, built with React, will allow easy interaction with the core backend.
+## Check it out
+
+This has not been deployed, so to check it out locally, clone the repo and run:
+
+```
+$ npm install
+```
+
+First, in a new terminal window, make sure testrpc is running:
+
+```
+$ testrpc
+```
+
+Compile and migrate the contracts:
+
+```
+$ truffle compile
+$ truffle migrate
+```
+
+
+To check out the frontend on localhost:
+
+```
+$ npm run start
+```
+
+
+To run tests (optional):
+
+```
+$ truffle test
+```
 
