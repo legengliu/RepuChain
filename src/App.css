@@ -9,6 +9,20 @@ body,
   text-align: center;
 }
 
+.helpText {
+  text-align: center;
+  color: #4663bb;
+}
+
+.toggleHelp {
+  color: #4663bb;
+}
+
+.toggleHelp:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .subtitle {
   font-style: italic;
 }

@@ -25,7 +25,7 @@ Through the web browser interface, anyone can send a rating to the core Ethereum
 
 The bottom line is that a high-ranking address's ranking of another address will carry more weight than that of a low-ranking address. Small fees associated with Ethereum smart contract transactions will disincentivize bad actors from spamming and manipulating the system.
 
-## Check it out
+## Installation
 
 This has not been deployed, so to check it out locally, clone the repo and run:
 
@@ -53,6 +53,7 @@ To check out the frontend on localhost:
 $ npm run start
 ```
 
+Once the browser is open, click the "help" text to get started.
 
 To run tests (optional):
 
@@ -60,3 +61,6 @@ To run tests (optional):
 $ truffle test
 ```
 
+## Acknowledgements:
+
+Boilerplate code and configurations for this project were adapted from [React Truffle Box](https://github.com/truffle-box/react-box).

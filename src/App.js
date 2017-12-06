@@ -17,6 +17,7 @@ class App extends Component {
       prRankings: [],
       web3: null,
       accounts: [],
+      showHelp: false,
       ReputationContract: null
     }
   }
@@ -156,11 +157,37 @@ class App extends Component {
       );
   }
 
+  toggleHelp() {
+    this.setState({showHelp: !this.state.showHelp});
+  }
+
+  renderHelp() {
+    if (this.state.showHelp) {
+      let tip1 = "Click 'Rate!' to send a rating from an address to another address.";
+      let tip2 = "Then, click 'Get all ratings' to see a list of the submitted ratings.";
+      let tip3 = "Click 'Rank all addresses' if you want to run the ranking algorithm and assign a 'reputation score' to each address, based how many ratings it has received.";
+      let tip4 = "To get started, you can play around with these 10 addresses: ";
+      let listAccounts = this.state.accounts.map((account, index) => 
+        <li key={index}> Address {index}: {account}</li> 
+      );
+      return (<div> 
+        <div>{tip1}</div>
+        <div>{tip2}</div>
+        <div>{tip3}</div>
+        <br/>
+        <div>{tip4}</div>
+        <div>{listAccounts}</div>
+      </div>);
+    }
+  }
+
   render() {
     return (
       <div className="App">
               <h1>RepuChain</h1>
-              <p className="subtitle">case study in a decentralized reputation system</p>
+              <span className="subtitle">case study in a decentralized reputation system&nbsp;</span>
+              <a className="toggleHelp" onClick={() => this.toggleHelp()}>(help)</a>
+              <div className="helpText">{this.renderHelp()}</div>
             <div >
               Submit a rating for an Ethereum address:
             </div>
